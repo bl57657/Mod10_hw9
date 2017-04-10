@@ -14,12 +14,12 @@
 #include <stdio.h>		/* For Standard I/O */
 #include <stdlib.h>
 #include <string.h>
-#define FSIZE 81
+#define FSIZE 12
 /* Function Prototypes */
 void Usage(char** info);
-void ReadFile(char *dataFile, float num[]);
+void ReadFile(char *dataFile, float *num);
 FILE *OpenCheckFile(char *dataFile2);
-void WriteFile(FILE *dataFile3, float num2[]);
+void WriteFile(FILE *dataFile3, float *num2);
 	FILE *OutF;
 	char ReturnF;
 /* Main Program */
@@ -28,14 +28,14 @@ int main(int argc, char *argv[])
 	float digits[FSIZE];  // declare variables
 	char In[FSIZE];
 	char Out[FSIZE]; 
-	strcpy(In, argv[1]);
-	strcpy(Out, argv[2]);
-	if(argc != 3 || (strcmp(*(argv + 1), "--help") == 0))
+	if(argc != 3)// || (strcmp(*(argv + 1), "--help") == 0))
 	{
 		Usage(argv); // call usage when 2 strings arent there or --help is the first string. 
 	}
 	else
 	{
+	strcpy(In, argv[1]);
+	strcpy(Out, argv[2]);
 	ReadFile(In, digits);//store info, pass input file name & array
 	OpenCheckFile(Out);
 	WriteFile(OutF, digits);
@@ -49,10 +49,11 @@ void Usage(char** info)
 	exit(1);
 	return;
 }
-void ReadFile(char *dataFile1, float num[])
+void ReadFile(char *dataFile1, float *num)
 {
 	FILE *InF;
 	InF = fopen(dataFile1, "r");//opening file stream at position argv[1]
+//	printf("%s", dataFile1);
 	if(InF == NULL)
 	{
 		printf("Not able to read file\n");
@@ -60,11 +61,17 @@ void ReadFile(char *dataFile1, float num[])
 		exit(1);
 	}
 	printf("File read successful\n");
-
-	while(fscanf(InF, "%f", num) != EOF);
+//	int count = 0;
+	for(int i = 0; i < FSIZE; i++)
 	{
-		num++;
+		fscanf(InF, "%f", &num[i]);
+//		printf("n = %f\n", num[i]);
 	}
+/* 	while(fscanf(InF, "%f", &num[count]) != 0);
+	{
+		count++;
+	printf("num ==%f", num[count]);
+	}*/
 	fclose(InF);
 	return;
 }
@@ -93,7 +100,7 @@ FILE *OpenCheckFile(char *dataFile2)
 	}
 	return (OutF);
 }	
-void WriteFile(FILE *dataFile3, float num2[])
+void WriteFile(FILE *dataFile3, float *num2)
 {
 //	char answer = 0;
 	float avgnum, sumnum;
